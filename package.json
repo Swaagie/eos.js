@@ -6,6 +6,9 @@
   "scripts": {
     "test": "make test"
   },
+  "dependencies": {
+    "atomic": "git://github.com/Swaagie/atomic.git#master"
+  },
   "devDependencies": {
     "square": "git://github.com/observing/square.git#development"
   },
