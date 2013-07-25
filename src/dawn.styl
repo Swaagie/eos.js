@@ -3,12 +3,25 @@
 
   nav
     background: rgba(51, 51, 51, 0.9)
+    background-clip: padding-box
+    border-top: 30px solid transparent
+    bottom: 0
     height: 150px
     left: 0
     position: fixed
-    bottom: 0
+    transition: all 1s ease
     width: 100%
     z-index: 1
+
+    &.hide
+      bottom: -150px
+
+      &:hover
+        border-top: 1px solid transparent
+        bottom: -130px
+
+    &.show
+      bottom: 0
 
   iframe
     position: absolute
