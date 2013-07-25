@@ -11,9 +11,13 @@
   function Dawn(viewport) {
     this.viewport = viewport;
     this.initialize();
+
+    // Change the dimensions of our iframe if the window is resized.
+    w.addEventListener('resize', this.redraw.bind(this));
   }
 
   /**
+   * Initialize the iframe, load the website and add the navigation.
    *
    * @param {Element} start
    * @api public
@@ -34,22 +38,37 @@
   Dawn.prototype.setAttributes = Atomic.prototype.setAttributes;
 
   /**
+   * Change dimensions of the iframe, for instance on window resize.
+   *
+   * @returns {Dawn} fluent interface
+   * @api private
+   */
+  Dawn.prototype.redraw = function redraw() {
+    this.setAttributes(this.frame, {
+        width: + w.innerWidth + 'px'
+      , height: + w.innerHeight + 'px'
+    });
+
+    return this;
+  };
+
+  /**
    * Setup the iframe.
    *
    * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.initFrame = function initFrame() {
-    var frame = d.createElement('iframe')
+    var frame = this.frame = d.createElement('iframe')
       , attributes = {
             style: [
-                'left: -' + this.viewport.offsetLeft + 'px'
-              , 'top: -' + this.viewport.offsetTop + 'px'
-              , 'width:' + w.innerWidth + 'px'
-              , 'height:' + w.innerHeight + 'px'
+                'left:-' + this.viewport.offsetLeft + 'px'
+              , 'top:-' + this.viewport.offsetTop + 'px'
             ].join(';')
           , src: this.viewport.getAttribute('data-load')
           , seamless: true
+          , width: + w.innerWidth + 'px'
+          , height: + w.innerHeight + 'px'
         };
 
     // Set the attributes and insert the iframe in Dawn.
