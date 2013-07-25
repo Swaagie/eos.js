@@ -12,7 +12,7 @@
     this.viewport = viewport;
     this.initialize();
 
-    // Change the dimensions of our iframe if the window is resized.
+    // Change the dimensions of the iframe on window resize.
     w.addEventListener('resize', this.redraw.bind(this));
   }
 
@@ -86,20 +86,23 @@
     var parts = ['<input type=text value=0 readonly><ol>', '</ol><canvas></canvas>']
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
       , nav = d.createElement('nav')
+      , i = this.articles.length
       , title;
 
-    for (var i = 0; i < this.articles.length; i++) {
-      title = this.articles[i].children[0].innerText;
-      parts.splice(1, 0, '<li><label>' + title + '</label></li>');
+    while (i--) {
+      title = this.articles[i].getElementsByTagName('h1')[0];
+      parts.splice(1, 0, '<li><label>' + (title.innerText || title.textContent) + '</label></li>');
     }
 
     // Add the electrons.
     atom.innerHTML = parts.join('');
     nav.appendChild(atom);
 
-    // Insert the navigation.
-    this.atomic = new Atomic(atom);
+    // Insert the navigation and construct atomic after, otherwise the
+    // getComputedStyle will fail as it is not attached to the DOM.
     this.viewport.insertBefore(nav, this.viewport.firstChild);
+    this.atomic = new Atomic(atom);
+
     return this;
   };
 
