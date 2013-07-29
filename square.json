@@ -13,7 +13,8 @@
       "description": "Changable variables to easily customize Atomic"
     },
     "src/dawn.styl": {
-      "description": "Styling for top navigation and overlay"
+      "description": "Styling for top navigation and overlay",
+      "dependencies": [ "src/defaults.styl" ]
     },
     "node_modules/atomic/src/atomic.styl": {
       "description": "Styling for the progress bar",

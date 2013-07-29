@@ -1,12 +1,29 @@
+html
+body
+  height: 100%
+  margin: 0
+  overflow: hidden
+
 .dawn
   position: relative
+  counter-reset: dawn
+  font-family: Montserrat,Helvetica
 
-  nav
-    background: rgba(51, 51, 51, 0.9)
+  & > input
+    display: none
+
+  &.hide article
+    opacity: 0
+
+  &.show article
+    opacity: 1
+
+  & > nav
+    background: text
     background-clip: padding-box
     border-top: 30px solid transparent
     bottom: 0
-    height: 150px
+    height: 15%
     left: 0
     position: fixed
     transition: all 1s ease
@@ -14,14 +31,54 @@
     z-index: 1
 
     &.hide
-      bottom: -150px
+      bottom: -15%
 
       &:hover
         border-top: 1px solid transparent
-        bottom: -130px
+        bottom: -12%
 
     &.show
       bottom: 0
 
-  iframe
+  .atomic
     position: absolute
+    bottom: 0
+
+  & > iframe
+    position: absolute
+
+  & > article
+    background: bg
+    border-radius: 10px 50px 10px
+    border: 1px solid transparent
+    color: text
+    height: height
+    left: 50%
+    position: fixed
+    text-align: center
+    transform: translateX(-50%)
+    transition: all .2s ease
+    width: 80%
+
+    &:before
+      background-color: text
+      border-radius: 50%
+      color: bg
+      content: counter(dawn)
+      counter-increment: dawn
+      font-size: 16px
+      height: 19px
+      left: 10px
+      padding-top: 1px
+      position: absolute
+      top: 10px
+      width: 20px
+
+    &.previous
+      transform: translate(-50%, -75%)
+
+    &.current
+      transform: translate(-50%, 50%)
+
+    &.next
+      transform: translate(-50%, 175%)

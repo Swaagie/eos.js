@@ -21,6 +21,8 @@
    */
   function Dawn(viewport) {
     this.viewport = viewport;
+    this.parent = viewport.parentNode;
+
     this.initialize();
   }
 
@@ -31,11 +33,11 @@
    * @api public
    */
   Dawn.prototype.initialize = function initialize() {
-    // Get the articles.
-    this.articles = this.viewport.getElementsByTagName('article');
+    // Get the content and its articles.
+    this.content = this.viewport.getElementsByTagName('article');
 
-    // Initialize the iframe
-    this.initFrame().initNav();
+    // Initialize the iframe, navigation and hidden controls.
+    this.initFrame().initNav().initControls();
 
     // Change the dimensions of the iframe on window resize.
     w.addEventListener('resize', this.redraw.bind(this));
@@ -59,35 +61,30 @@
    * @api private
    */
   Dawn.prototype.redraw = function redraw(e) {
-    this.setAttributes(this.frame, {
-        width: + w.innerWidth + 'px'
-      , height: + w.innerHeight + 'px'
-    });
+    this.frame.style.height = this.parent.offsetHeight + 'px';
+    this.frame.style.width = this.parent.offsetWidth + 'px';
 
     return this;
   };
 
   /**
-   * Setup the iframe.
+   * Setup the iframe and the content.
    *
    * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.initFrame = function initFrame() {
-    var frame = this.frame = d.createElement('iframe')
-      , attributes = {
-            style: [
-                'left:-' + this.viewport.offsetLeft + 'px'
-              , 'top:-' + this.viewport.offsetTop + 'px'
-            ].join(';')
-          , src: this.viewport.getAttribute('data-load')
-          , seamless: true
-          , width: + w.innerWidth + 'px'
-          , height: + w.innerHeight + 'px'
-        };
+    var frame = this.frame = d.createElement('iframe');
 
     // Set the attributes and insert the iframe in Dawn.
-    this.viewport.insertBefore(this.setAttributes(frame, attributes), this.viewport.firstChild);
+    this.setAttributes(frame, {
+        seamless: true
+      , height: this.parent.offsetHeight + 'px'
+      , width: this.parent.offsetWidth + 'px'
+      , src: this.viewport.getAttribute('data-load')
+    });
+
+    this.viewport.insertBefore(frame, this.viewport.firstChild);
     return this;
   };
 
@@ -101,11 +98,11 @@
     var parts = ['<input type=text value=0 readonly><ol>', '</ol><canvas></canvas>']
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
       , nav = this.nav = d.createElement('nav')
-      , i = this.articles.length
+      , i = this.content.length
       , title;
 
     while (i--) {
-      title = this.articles[i].getElementsByTagName('h1')[0];
+      title = this.content[i].getElementsByTagName('h1')[0];
       parts.splice(1, 0, '<li><label>' + (title.innerText || title.textContent) + '</label></li>');
     }
 
@@ -124,6 +121,17 @@
     return this;
   };
 
+  Dawn.prototype.initControls = function initControls() {
+    var attr = { type: 'radio', name: 'dawn' }
+      , i = this.content.length;
+
+    this.radio = [];
+    while (i--) {
+      this.radio.unshift(element = d.createElement('input'));
+      this.viewport.insertBefore(this.setAttributes(element, attr), this.viewport.firstChild);
+    }
+  };
+
   /**
    * Toggle the navigation visibility.
    *
@@ -136,24 +144,26 @@
   };
 
   /**
-   * Show the navigation visibility.
+   * Hide the viewport.
    *
    * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.hide = function hide() {
     this.nav.setAttribute('class', 'hide');
+    this.viewport.setAttribute('class', 'dawn hide');
     return this;
   };
 
   /**
-   * Show the navigation visibility.
+   * Show the viewport.
    *
    * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.show = function show() {
     this.nav.setAttribute('class', 'show');
+    this.viewport.setAttribute('class', 'dawn show');
     return this;
   };
 
