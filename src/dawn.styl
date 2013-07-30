@@ -9,16 +9,55 @@ body
   counter-reset: dawn
   font-family: Montserrat,Helvetica
 
-  & > input
-    display: none
+  for i in 1..n
+    > section
+      article:nth-of-type({i})
+      label:nth-of-type({i})
+        top: (i - 1) * 55%
 
-  &.hide article
-    opacity: 0
+    input[name=atomic]:nth-child({i}):checked
+      & ~ nav .atomic
+        li:nth-child(-n+{i - 1}):before
+          content: '✓'
 
-  &.show article
-    opacity: 1
+        li:hover:before
+          content: ''
 
-  & > nav
+        li:nth-child({i})
+          color: white
+
+      & ~ section
+        top: 77.5% + i * -55
+
+        label:nth-of-type({i - 1})
+          top: -22.5% + (i - 1) * 55
+
+  &.hide
+    article, label
+      opacity: 0
+
+  &.show
+    article, label
+      opacity: 1
+
+  > section
+    color: text
+    height: 100%
+    left: 10%
+    position: fixed
+    text-align: center
+    top: 22.5%
+    transition: all 1s cubic-bezier(0.770, 0.000, 0.175, 1.000)
+    width: 80%
+
+    label
+      height: 7.5%
+      position: absolute
+      left: 0
+      width: 100%
+      z-index: 1
+
+  > nav
     background: text
     background-clip: padding-box
     border-top: 30px solid transparent
@@ -41,24 +80,18 @@ body
       bottom: 0
 
   .atomic
-    position: absolute
     bottom: 0
-
-  & > iframe
     position: absolute
 
-  & > article
+  > iframe
+    position: absolute
+
+  > section article
     background: bg
+    position: absolute
     border-radius: 10px 50px 10px
-    border: 1px solid transparent
-    color: text
     height: height
-    left: 50%
-    position: fixed
-    text-align: center
-    transform: translateX(-50%)
-    transition: all .2s ease
-    width: 80%
+    width: 100%
 
     &:before
       background-color: text
@@ -73,12 +106,3 @@ body
       position: absolute
       top: 10px
       width: 20px
-
-    &.previous
-      transform: translate(-50%, -75%)
-
-    &.current
-      transform: translate(-50%, 50%)
-
-    &.next
-      transform: translate(-50%, 175%)

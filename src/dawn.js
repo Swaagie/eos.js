@@ -9,6 +9,8 @@
    */
   var map = {
       27: 'hide'
+    , 38: 'previous'
+    , 40: 'next'
     , 84: 'toggle'
   };
 
@@ -37,7 +39,7 @@
     this.content = this.viewport.getElementsByTagName('article');
 
     // Initialize the iframe, navigation and hidden controls.
-    this.initFrame().initNav().initControls();
+    this.initFrame().initNav();
 
     // Change the dimensions of the iframe on window resize.
     w.addEventListener('resize', this.redraw.bind(this));
@@ -57,14 +59,11 @@
    * Change dimensions of the iframe, for instance on window resize.
    *
    * @param {Event} e
-   * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.redraw = function redraw(e) {
     this.frame.style.height = this.parent.offsetHeight + 'px';
     this.frame.style.width = this.parent.offsetWidth + 'px';
-
-    return this;
   };
 
   /**
@@ -116,69 +115,73 @@
     // Insert the navigation and construct atomic after, otherwise the
     // getComputedStyle will fail as it is not attached to the DOM.
     this.viewport.insertBefore(nav, this.viewport.firstChild);
-    this.atomic = new Atomic(atom);
+    this.atomic = new Atomic(atom, this.viewport);
+
+    // Keep track of the current step and max steps.
+    this.index = 0;
+    this.max = this.atomic.radio.length - 1;
 
     return this;
   };
 
-  Dawn.prototype.initControls = function initControls() {
-    var attr = { type: 'radio', name: 'dawn' }
-      , i = this.content.length;
+  /**
+   * Go to the previous step.
+   *
+   * @api private
+   */
+  Dawn.prototype.previous = function previous() {
+    if (--this.index < 0) this.index = 0;
+    this.atomic.radio[this.index].checked = true;
+  };
 
-    this.radio = [];
-    while (i--) {
-      this.radio.unshift(element = d.createElement('input'));
-      this.viewport.insertBefore(this.setAttributes(element, attr), this.viewport.firstChild);
-    }
+  /**
+   * Go to the next step.
+   *
+   * @api private
+   */
+  Dawn.prototype.next = function next() {
+    if (++this.index > this.max) this.index = this.max;
+    this.atomic.radio[this.index].checked = true;
   };
 
   /**
    * Toggle the navigation visibility.
    *
-   * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.toggle = function toggle() {
     this[this.nav.getAttribute('class') === 'hide' ? 'show' : 'hide'].call(this);
-    return this;
   };
 
   /**
    * Hide the viewport.
    *
-   * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.hide = function hide() {
     this.nav.setAttribute('class', 'hide');
     this.viewport.setAttribute('class', 'dawn hide');
-    return this;
   };
 
   /**
    * Show the viewport.
    *
-   * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.show = function show() {
     this.nav.setAttribute('class', 'show');
     this.viewport.setAttribute('class', 'dawn show');
-    return this;
   };
 
   /**
    * Listen to keypresses to control the overlay.
    *
    * @param {Event} e
-   * @returns {Dawn} fluent interface
    * @api private
    */
   Dawn.prototype.hotkeys = function hotkeys(e) {
     e = map[e.keyCode];
-
     if (e) this[e].call(this);
-    return this;
   };
 
   // Initialize getting started instance, more than one doensn't make sense.

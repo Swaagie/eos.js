@@ -5,4 +5,4 @@ ifeq ($(strip $(W)),0)
 endif
 
 app:
-	./node_modules/.bin/square $(FLAGS) -p minify -d min ./square.json
+	./node_modules/.bin/square $(FLAGS) -p minify ./square.json
