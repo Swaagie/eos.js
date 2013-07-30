@@ -61,12 +61,13 @@
   /**
    * Change dimensions of the iframe, for instance on window resize.
    *
-   * @param {Event} e
    * @api private
    */
-  Dawn.prototype.redraw = function redraw(e) {
-    this.frame.style.height = this.parent.offsetHeight + 'px';
-    this.frame.style.width = this.parent.offsetWidth + 'px';
+  Dawn.prototype.redraw = function redraw() {
+    this.setAttributes(this.frame, {
+        height: this.parent.offsetHeight + 'px'
+      , width: this.parent.offsetWidth + 'px'
+    });
   };
 
   /**
