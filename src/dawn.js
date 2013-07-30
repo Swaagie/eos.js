@@ -9,7 +9,9 @@
    */
   var map = {
       27: 'hide'
+    , 37: 'previous'
     , 38: 'previous'
+    , 39: 'next'
     , 40: 'next'
     , 84: 'toggle'
   };
@@ -98,11 +100,13 @@
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
       , nav = this.nav = d.createElement('nav')
       , i = this.content.length
+      , radio = []
       , title;
 
     while (i--) {
       title = this.content[i].getElementsByTagName('h1')[0];
       parts.splice(1, 0, '<li><label>' + (title.innerText || title.textContent) + '</label></li>');
+
     }
 
     // Add the electrons.
@@ -131,7 +135,7 @@
    */
   Dawn.prototype.previous = function previous() {
     if (--this.index < 0) this.index = 0;
-    this.atomic.radio[this.index].checked = true;
+    this.atomic.update(this.atomic.radio[this.index].value);
   };
 
   /**
@@ -141,7 +145,7 @@
    */
   Dawn.prototype.next = function next() {
     if (++this.index > this.max) this.index = this.max;
-    this.atomic.radio[this.index].checked = true;
+    this.atomic.update(this.atomic.radio[this.index].value);
   };
 
   /**

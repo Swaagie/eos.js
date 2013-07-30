@@ -32,13 +32,13 @@ body
         label:nth-of-type({i - 1})
           top: -22.5% + (i - 1) * 55
 
-  &.hide
-    article, label
-      opacity: 0
+  &.hide > section
+    left: -100%
+    visibility: hidden
 
-  &.show
-    article, label
-      opacity: 1
+  &.show > section
+    left: 10%
+    visibility: visible
 
   > section
     color: text
@@ -65,7 +65,7 @@ body
     height: 15%
     left: 0
     position: fixed
-    transition: all 1s ease
+    transition: all .3s ease
     width: 100%
     z-index: 1
 
@@ -91,7 +91,7 @@ body
     position: absolute
     border-radius: 10px 50px 10px
     height: height
-    transition: all .2s ease
+    transition: all .3s ease
     width: 100%
 
     &:before
