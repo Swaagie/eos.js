@@ -38,7 +38,8 @@
    */
   Dawn.prototype.initialize = function initialize() {
     // Get the content and its articles.
-    this.content = this.viewport.getElementsByTagName('article');
+    this.content = this.viewport.getElementsByTagName('section')[0];
+    this.articles = this.content.getElementsByTagName('article');
 
     // Initialize the iframe, navigation and hidden controls.
     this.initFrame().initNav();
@@ -99,14 +100,20 @@
     var parts = ['<input type=text value=0 readonly><ol>', '</ol><canvas></canvas>']
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
       , nav = this.nav = d.createElement('nav')
-      , i = this.content.length
-      , radio = []
+      , i = this.articles.length
+      , control
       , title;
 
     while (i--) {
-      title = this.content[i].getElementsByTagName('h1')[0];
+      title = this.articles[i].getElementsByTagName('h1')[0];
       parts.splice(1, 0, '<li><label>' + (title.innerText || title.textContent) + '</label></li>');
 
+      // Add labels for each article panel.
+      control = d.createElement('label');
+      control.setAttribute('for', 'i' + i);
+      control.addEventListener('click', this.update.bind(this, i));
+
+      this.content.insertBefore(control, this.content.firstChild);
     }
 
     // Add the electrons.
@@ -129,13 +136,32 @@
   };
 
   /**
+   * Render the various elements on the page.
+   *
+   * @api private
+   */
+  Dawn.prototype.render = function render() {
+    this.atomic.update(this.atomic.radio[this.index].value);
+  };
+
+  /**
+   * Update the current step.
+   *
+   * @param {Number} n step number
+   * @api private
+   */
+  Dawn.prototype.update = function update(n) {
+    this.index = n;
+  };
+
+  /**
    * Go to the previous step.
    *
    * @api private
    */
   Dawn.prototype.previous = function previous() {
     if (--this.index < 0) this.index = 0;
-    this.atomic.update(this.atomic.radio[this.index].value);
+    this.render();
   };
 
   /**
@@ -145,7 +171,7 @@
    */
   Dawn.prototype.next = function next() {
     if (++this.index > this.max) this.index = this.max;
-    this.atomic.update(this.atomic.radio[this.index].value);
+    this.render();
   };
 
   /**

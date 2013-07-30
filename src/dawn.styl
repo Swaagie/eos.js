@@ -33,7 +33,7 @@ body
           top: -22.5% + (i - 1) * 55
 
   &.hide > section
-    left: -100%
+    left: -400%
     visibility: hidden
 
   &.show > section
@@ -47,7 +47,7 @@ body
     position: fixed
     text-align: center
     top: 22.5%
-    transition: all 1s cubic-bezier(0.770, 0.000, 0.175, 1.000)
+    transition: all .5s cubic-bezier(0.770, 0.000, 0.175, 1.000)
     width: 80%
 
     label
@@ -55,12 +55,11 @@ body
       position: absolute
       left: 0
       width: 100%
-      z-index: 1
+      z-index: 2
 
   > nav
     background: text
     background-clip: padding-box
-    border-top: 30px solid transparent
     bottom: 0
     height: 15%
     left: 0
@@ -70,6 +69,7 @@ body
     z-index: 1
 
     &.hide
+      border-top: 30px solid transparent
       bottom: -15%
 
       &:hover
