@@ -100,7 +100,7 @@
   Dawn.prototype.initNav = function initNav() {
     var parts = ['<input type=text value=0 readonly><ol>', '</ol><canvas></canvas>']
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
-      , nav = this.nav = d.createElement('nav')
+      , nav = this.nav = this.viewport.getElementsByTagName('nav')[0]
       , i = this.articles.length
       , control
       , title;

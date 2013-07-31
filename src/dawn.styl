@@ -8,12 +8,14 @@ body
   position: relative
   counter-reset: dawn
   font-family: Montserrat,Helvetica
+  color: text
+  text-align: center
 
   for i in 1..n
     > section
       article:nth-of-type({i})
       label:nth-of-type({i})
-        top: (i - 1) * 55%
+        top: (i - 1) * 70%
 
     input[name=atomic]:nth-child({i}):checked
       & ~ nav .atomic
@@ -24,16 +26,16 @@ body
           content: ''
 
         li:nth-child({i})
-          color: white
+          color: highlight
 
       & ~ section
-        top: 77.5% + i * -55
+        top: 95% + i * -70
 
         label:nth-of-type({i - 1})
-          top: -22.5% + (i - 1) * 55
+          top: -25% + (i - 1) * 70
 
   &.hide > section
-    left: -400%
+    left: 200%
     visibility: hidden
 
   &.show > section
@@ -41,43 +43,34 @@ body
     visibility: visible
 
   > section
-    color: text
     height: 100%
     left: 10%
     position: fixed
-    text-align: center
-    top: 22.5%
+    top: 25%
     transition: all .5s ease-out
     width: 80%
 
     label
-      height: 7.5%
+      height: 5%
       position: absolute
       left: 0
       width: 100%
       z-index: 2
 
   > nav
-    background: text
+    background: bg
     background-clip: padding-box
-    bottom: 0
-    height: 15%
-    left: 0
+    border-right: 30px solid transparent
+    height: 100%
+    left: -145px
     position: fixed
     transition: all .3s ease-out
-    width: 100%
+    width: 145px
     z-index: 1
 
-    &.hide
-      border-top: 30px solid transparent
-      bottom: -15%
-
-      &:hover
-        border-top: 1px solid transparent
-        bottom: -12%
-
-    &.show
-      bottom: 0
+    &:hover
+      border-right: 1px solid transparent
+      left: 0
 
   .atomic
     bottom: 0
