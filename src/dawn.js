@@ -101,37 +101,39 @@
     var parts = ['<input type=text value=0 readonly><ol>', '</ol><canvas></canvas>']
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
       , nav = this.nav = this.viewport.getElementsByTagName('nav')[0]
-      , i = this.articles.length
-      , control
-      , title;
+      , style = w.getComputedStyle(this.articles[0])
+      , n = this.articles.length
+      , i = n
+      , control, title;
+
+    // Show the nav as soon as it is clicked.
+    nav.addEventListener('click', this.show.bind(this, true));
 
     while (i--) {
       title = this.articles[i].getElementsByTagName('h1')[0];
       parts.splice(1, 0, '<li><label>' + (title.innerText || title.textContent) + '</label></li>');
 
       // Add labels for each article panel.
-      control = d.createElement('label');
-      control.setAttribute('for', 'i' + i);
-      control.addEventListener('click', this.update.bind(this, i));
+      this.articles[i].appendChild(
+        this.setAttributes(d.createElement('label'), { for: 'i' + i })
+      );
 
-      this.content.insertBefore(control, this.content.firstChild);
+      // Clone each panel and add frames to the navigation.
+      nav.insertBefore(this.articles[i].cloneNode(true), nav.children[1]);
     }
 
-    // Add the electrons.
+    // Add the electrons and add Atomic to the DOM before constructing,
+    // otherwise getComputedStyle will fail as it is not attached to the DOM.
     atom.innerHTML = parts.join('');
     nav.appendChild(atom);
 
-    // Show the nav as soon as it is clicked on the bottom.
-    nav.addEventListener('click', this.show.bind(this, true));
-
-    // Insert the navigation and construct atomic after, otherwise the
-    // getComputedStyle will fail as it is not attached to the DOM.
-    this.viewport.insertBefore(nav, this.viewport.firstChild);
-    this.atomic = new Atomic(atom, this.viewport);
-
     // Keep track of the current step and max steps.
     this.index = 0;
-    this.max = this.atomic.radio.length - 1;
+    this.atomic = new Atomic(atom, this.viewport);
+    this.max = n - 1;
+
+    // Listen to change events in the radio buttons and mitigate to update.
+    while (n--) this.atomic.radio[n].addEventListener('change', this.update.bind(this, n));
 
     return this;
   };
