@@ -8,11 +8,10 @@
    * @api private
    */
   var map = {
-      27: 'hide'
-    , 37: 'previous'
-    , 38: 'previous'
-    , 39: 'next'
+      38: 'previous'
     , 40: 'next'
+    , 72: 'nav'
+    , 83: 'search'
     , 84: 'toggle'
   };
 
@@ -100,14 +99,11 @@
   Dawn.prototype.initNav = function initNav() {
     var parts = ['<input type=text value=0 readonly><ol>', '</ol><canvas></canvas>']
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
-      , nav = this.nav = this.viewport.getElementsByTagName('nav')[0]
+      , nav = this.viewport.getElementsByTagName('nav')[0]
       , style = w.getComputedStyle(this.articles[0])
       , n = this.articles.length
       , i = n
       , control, title;
-
-    // Show the nav as soon as it is clicked.
-    nav.addEventListener('click', this.show.bind(this, true));
 
     while (i--) {
       title = this.articles[i].getElementsByTagName('h1')[0];
@@ -117,9 +113,6 @@
       this.articles[i].appendChild(
         this.setAttributes(d.createElement('label'), { for: 'i' + i })
       );
-
-      // Clone each panel and add frames to the navigation.
-      nav.insertBefore(this.articles[i].cloneNode(true), nav.children[1]);
     }
 
     // Add the electrons and add Atomic to the DOM before constructing,
@@ -129,6 +122,7 @@
 
     // Keep track of the current step and max steps.
     this.index = 0;
+    this.searchbox = nav.getElementsByTagName('input')[0];
     this.atomic = new Atomic(atom, this.viewport);
     this.max = n - 1;
 
@@ -144,7 +138,7 @@
    * @api private
    */
   Dawn.prototype.render = function render() {
-    this.atomic.update(this.atomic.radio[this.index].value);
+    this.reset().atomic.update(this.atomic.radio[this.index].value);
   };
 
   /**
@@ -154,15 +148,17 @@
    * @api private
    */
   Dawn.prototype.update = function update(n) {
+    this.reset();
     this.index = n;
   };
 
   /**
    * Go to the previous step.
    *
+   * @param {Event} e
    * @api private
    */
-  Dawn.prototype.previous = function previous() {
+  Dawn.prototype.previous = function previous(e) {
     if (--this.index < 0) this.index = 0;
     this.render();
   };
@@ -170,9 +166,10 @@
   /**
    * Go to the next step.
    *
+   * @param {Event} e
    * @api private
    */
-  Dawn.prototype.next = function next() {
+  Dawn.prototype.next = function next(e) {
     if (++this.index > this.max) this.index = this.max;
     this.render();
   };
@@ -180,10 +177,11 @@
   /**
    * Toggle the navigation visibility.
    *
+   * @param {Event} e
    * @api private
    */
-  Dawn.prototype.toggle = function toggle() {
-    this[this.nav.getAttribute('class') === 'hide' ? 'show' : 'hide'].call(this);
+  Dawn.prototype.toggle = function toggle(e) {
+    this[~this.viewport.getAttribute('class').indexOf('hide') ? 'show' : 'hide'].call(this);
   };
 
   /**
@@ -192,7 +190,6 @@
    * @api private
    */
   Dawn.prototype.hide = function hide() {
-    this.nav.setAttribute('class', 'hide');
     this.viewport.setAttribute('class', 'dawn hide');
   };
 
@@ -202,8 +199,47 @@
    * @api private
    */
   Dawn.prototype.show = function show() {
-    this.nav.setAttribute('class', 'show');
     this.viewport.setAttribute('class', 'dawn show');
+  };
+
+  /**
+   * Show the navigation/intro.
+   *
+   * @param {Event} e
+   * @returns {Dawn} fluent interface
+   * @api private
+   */
+  Dawn.prototype.nav = function nav(e) {
+    this.viewport.setAttribute('class', 'dawn nav');
+    return this;
+  };
+
+  /**
+   * Focus the search box.
+   *
+   * @param {Event} e
+   * @api private
+   */
+  Dawn.prototype.search = function search(e) {
+    var active = d.activeElement;
+    if (active === this.searchbox || !this.searchbox) return;
+
+    e.preventDefault();
+    this.nav().searchbox.focus();
+  };
+
+
+
+  /**
+   * Restore the state and call the mapped function.
+   *
+   * @returns {Dawn} fluent interface
+   * @api private
+   */
+  Dawn.prototype.reset = function reset() {
+    this.searchbox.blur();
+    this.viewport.setAttribute('class', 'dawn');
+    return this;
   };
 
   /**
@@ -213,8 +249,7 @@
    * @api private
    */
   Dawn.prototype.hotkeys = function hotkeys(e) {
-    e = map[e.keyCode];
-    if (e) this[e].call(this);
+    if (map[e.keyCode]) this[map[e.keyCode]].call(this, e);
   };
 
   // Initialize getting started instance, more than one doensn't make sense.
