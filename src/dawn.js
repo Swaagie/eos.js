@@ -121,7 +121,7 @@
     nav.appendChild(atom);
 
     // Keep track of the current step and max steps.
-    this.index = 0;
+    this.index = -1;
     this.searchbox = nav.getElementsByTagName('input')[0];
     this.atomic = new Atomic(atom, this.viewport);
     this.max = n - 1;
@@ -181,37 +181,28 @@
    * @api private
    */
   Dawn.prototype.toggle = function toggle(e) {
-    this[~this.viewport.getAttribute('class').indexOf('hide') ? 'show' : 'hide'].call(this);
+    this.setClass(~this.viewport.getAttribute('class').indexOf('hide') ? '' : 'hide');
   };
 
   /**
-   * Hide the viewport.
+   * Set a specific class on the viewport.
    *
-   * @api private
-   */
-  Dawn.prototype.hide = function hide() {
-    this.viewport.setAttribute('class', 'dawn hide');
-  };
-
-  /**
-   * Show the viewport.
-   *
-   * @api private
-   */
-  Dawn.prototype.show = function show() {
-    this.viewport.setAttribute('class', 'dawn show');
-  };
-
-  /**
-   * Show the navigation/intro.
-   *
-   * @param {Event} e
    * @returns {Dawn} fluent interface
    * @api private
    */
-  Dawn.prototype.nav = function nav(e) {
-    this.viewport.setAttribute('class', 'dawn nav');
+  Dawn.prototype.setClass = function setClass(className) {
+    this.viewport.setAttribute('class', 'dawn ' + className);
     return this;
+  };
+
+  /**
+   * Toggle the navigation/intro.
+   *
+   * @param {Event} e
+   * @api private
+   */
+  Dawn.prototype.nav = function nav(e) {
+    this.setClass(~this.viewport.getAttribute('class').indexOf('nav') ? '' : 'nav');
   };
 
   /**
@@ -225,10 +216,8 @@
     if (active === this.searchbox || !this.searchbox) return;
 
     e.preventDefault();
-    this.nav().searchbox.focus();
+    this.setClass('nav').searchbox.focus();
   };
-
-
 
   /**
    * Restore the state and call the mapped function.
