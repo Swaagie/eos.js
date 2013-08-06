@@ -226,6 +226,7 @@
    * @api private
    */
   Dawn.prototype.toggle = function toggle(e) {
+    if (d.activeElement === this.searchbox) return;
     this.setClass(~this.viewport.getAttribute('class').indexOf('hide') ? '' : 'hide');
   };
 
@@ -247,6 +248,7 @@
    * @api private
    */
   Dawn.prototype.nav = function nav(e) {
+    if (d.activeElement === this.searchbox) return;
     this.setClass(~this.viewport.getAttribute('class').indexOf('nav') ? '' : 'nav');
   };
 
