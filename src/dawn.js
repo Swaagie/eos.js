@@ -157,17 +157,16 @@
     var v = this.searchbox.value
       , i = this.articles.length
       , regexp = new RegExp('(' + v + ')', 'ig')
-      , article, content, all, n;
+      , article, all, n;
 
     // Only search against proper input.
     if (!v) return;
 
     while (i--) {
       article = this.articles[i];
-      content = this.text(article);
 
       // Only do a full search on each child if it is part of the content.
-      if (!regexp.test(content)) continue;
+      if (!regexp.test(this.text(article))) continue;
 
       all = article.getElementsByTagName('*');
       n = all.length;
