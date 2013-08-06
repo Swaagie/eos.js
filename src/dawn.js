@@ -11,7 +11,7 @@
       38: 'previous'
     , 40: 'next'
     , 72: 'nav'
-    , 83: 'search'
+    , 83: 'focus'
     , 84: 'toggle'
   };
 
@@ -56,6 +56,16 @@
    * @api private
    */
   Dawn.prototype.setAttributes = Atomic.prototype.setAttributes;
+
+  /**
+   * Get text from the element.
+   *
+   * @returns {String} text
+   * @api private
+   */
+  Dawn.prototype.text = function text(element) {
+    return element.innerText || element.textContent;
+  };
 
   /**
    * Change dimensions of the iframe, for instance on window resize.
@@ -103,14 +113,15 @@
       , style = w.getComputedStyle(this.articles[0])
       , n = this.articles.length
       , i = n
-      , control, title;
+      , control, title, article;
 
     while (i--) {
-      title = this.articles[i].getElementsByTagName('h1')[0];
-      parts.splice(1, 0, '<li><label>' + (title.innerText || title.textContent) + '</label></li>');
+      article = this.articles[i];
+      title = article.getElementsByTagName('h1')[0];
+      parts.splice(1, 0, '<li><label>' + this.text(title) + '</label></li>');
 
       // Add labels for each article panel.
-      this.articles[i].appendChild(
+      article.appendChild(
         this.setAttributes(d.createElement('label'), { for: 'i' + i })
       );
     }
@@ -129,7 +140,42 @@
     // Listen to change events in the radio buttons and mitigate to update.
     while (n--) this.atomic.radio[n].addEventListener('change', this.update.bind(this, n));
 
+    // Listen to searches.
+    nav.getElementsByTagName('form')[0].addEventListener('submit', this.search.bind(this));
     return this;
+  };
+
+  /**
+   * Search the content of each article and highlight the terms.
+   *
+   * @param {Event} e
+   * @api private
+   */
+  Dawn.prototype.search = function search(e) {
+    e.preventDefault();
+
+    var v = this.searchbox.value
+      , i = this.articles.length
+      , regexp = new RegExp('(' + v + ')', 'ig')
+      , article, content, all, n;
+
+    // Only search against proper input.
+    if (!v) return;
+
+    while (i--) {
+      article = this.articles[i];
+      content = this.text(article);
+
+      // Only do a full search on each child if it is part of the content.
+      if (!regexp.test(content)) continue;
+
+      all = article.getElementsByTagName('*');
+      n = all.length;
+
+      while (n--) {
+        all[n].innerHTML = this.text(all[n]).replace(regexp, '<mark>$1</mark>');
+      }
+    }
   };
 
   /**
@@ -211,7 +257,7 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.search = function search(e) {
+  Dawn.prototype.focus = function focus(e) {
     var active = d.activeElement;
     if (active === this.searchbox || !this.searchbox) return;
 
