@@ -7,18 +7,28 @@ var nib = require('nib')
   , stylus = require('gulp-stylus')
   , sourcemaps = require('gulp-sourcemaps');
 
+//
+// Set production flag, useful to exclude sourcemaps.
+//
+var map = process.env.SOURCEMAPS === 'true';
+
 gulp.task('default', ['script', 'style']);
 
 //
 // Define Gulp task to concat and minifiy scripts.
 //
 gulp.task('script', function script() {
-  return gulp.src('client/js/*.js')
+  var work = gulp.src('client/js/*.js')
     .pipe(sourcemaps.init())
     .pipe(uglify())
-    .pipe(concat('eos.min.js'))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist'));
+    .pipe(concat('eos.min.js'));
+
+  //
+  // Only write the source map if we are not building for production.
+  //
+  if (map) work.pipe(sourcemaps.write());
+
+  return work.pipe(gulp.dest('dist'));
 });
 
 //
