@@ -8,7 +8,8 @@ To compile and minify EOS.js run the following command. Make sure `devDependenci
 are installed. Browserify is used to include all client-side dependencies.
 
 ```bash
-npm run-script compile
+npm run-script compile       # OR
+npm run-script compile-dev   # to compile dev dependencies with sourcemaps included
 ```
 
 ### Browser support

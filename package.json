@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "make test",
-    "compile": "node_modules/.bin/gulp"
+    "compile": "NODE_ENV=production node_modules/.bin/gulp",
+    "compile-dev": "node_modules/.bin/gulp"
   },
   "dependencies": {
     "atomic": "git://github.com/Swaagie/atomic.git#master"
@@ -14,6 +15,7 @@
     "browserify": "5.9.x",
     "gulp": "3.8.x",
     "gulp-concat": "2.3.x",
+    "gulp-minify-css": "0.3.x",
     "gulp-sourcemaps": "1.1.x",
     "gulp-stylus": "1.3.x",
     "gulp-uglify": "0.3.x",
