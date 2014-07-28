@@ -7,7 +7,7 @@
     "test": "make test"
   },
   "dependencies": {
-    "atomic": "git://github.com/Swaagie/atomic.git#master",
+    "atomic": "git://github.com/Swaagie/atomic.git#master"
   },
   "devDependencies": {
     "browserify": "5.9.x"
