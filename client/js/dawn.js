@@ -1,4 +1,4 @@
-(function initDawn(w, d) {
+(function initEOS(w, d) {
   'use strict';
 
   /**
@@ -22,7 +22,7 @@
    * @param {Element} start
    * @api public
    */
-  function Dawn(viewport) {
+  function EOS(viewport) {
     this.viewport = viewport;
     this.parent = viewport.parentNode;
 
@@ -35,7 +35,7 @@
    * @param {Element} start
    * @api public
    */
-  Dawn.prototype.initialize = function initialize() {
+  EOS.prototype.initialize = function initialize() {
     // Get the content and its articles.
     this.content = this.viewport.getElementsByTagName('section')[0];
     this.articles = this.content.getElementsByTagName('article');
@@ -55,7 +55,7 @@
    *
    * @api private
    */
-  Dawn.prototype.setAttributes = Atomic.prototype.setAttributes;
+  EOS.prototype.setAttributes = Atomic.prototype.setAttributes;
 
   /**
    * Get text from the element.
@@ -63,7 +63,7 @@
    * @returns {String} text
    * @api private
    */
-  Dawn.prototype.text = function text(element) {
+  EOS.prototype.text = function text(element) {
     return element.innerText || element.textContent;
   };
 
@@ -72,7 +72,7 @@
    *
    * @api private
    */
-  Dawn.prototype.redraw = function redraw() {
+  EOS.prototype.redraw = function redraw() {
     this.setAttributes(this.frame, {
         height: this.parent.offsetHeight + 'px'
       , width: this.parent.offsetWidth + 'px'
@@ -82,13 +82,13 @@
   /**
    * Setup the iframe and the content.
    *
-   * @returns {Dawn} fluent interface
+   * @returns {EOS} fluent interface
    * @api private
    */
-  Dawn.prototype.initFrame = function initFrame() {
+  EOS.prototype.initFrame = function initFrame() {
     var frame = this.frame = d.createElement('iframe');
 
-    // Set the attributes and insert the iframe in Dawn.
+    // Set the attributes and insert the iframe in EOS.
     this.setAttributes(frame, {
         seamless: true
       , height: this.parent.offsetHeight + 'px'
@@ -103,10 +103,10 @@
   /**
    * Initialize the navigation and the Atomic progress bar.
    *
-   * @returns {Dawn} fluent interface
+   * @returns {EOS} fluent interface
    * @api private
    */
-  Dawn.prototype.initNav = function initNav() {
+  EOS.prototype.initNav = function initNav() {
     var parts = ['<input type=text value=0 readonly><ol>', '</ol><canvas></canvas>']
       , atom = this.setAttributes(d.createElement('section'), { class: 'atomic' })
       , nav = this.viewport.getElementsByTagName('nav')[0]
@@ -151,7 +151,7 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.search = function search(e) {
+  EOS.prototype.search = function search(e) {
     e.preventDefault();
 
     var v = this.searchbox.value
@@ -182,7 +182,7 @@
    *
    * @api private
    */
-  Dawn.prototype.render = function render() {
+  EOS.prototype.render = function render() {
     this.reset().atomic.update(this.atomic.radio[this.index].value);
   };
 
@@ -192,7 +192,7 @@
    * @param {Number} n step number
    * @api private
    */
-  Dawn.prototype.update = function update(n) {
+  EOS.prototype.update = function update(n) {
     this.reset();
     this.index = n;
   };
@@ -203,7 +203,7 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.previous = function previous(e) {
+  EOS.prototype.previous = function previous(e) {
     if (--this.index < 0) this.index = 0;
     this.render();
   };
@@ -214,7 +214,7 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.next = function next(e) {
+  EOS.prototype.next = function next(e) {
     if (++this.index > this.max) this.index = this.max;
     this.render();
   };
@@ -225,7 +225,7 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.toggle = function toggle(e) {
+  EOS.prototype.toggle = function toggle(e) {
     if (d.activeElement === this.searchbox) return;
     this.setClass(~this.viewport.getAttribute('class').indexOf('hide') ? '' : 'hide');
   };
@@ -233,11 +233,11 @@
   /**
    * Set a specific class on the viewport.
    *
-   * @returns {Dawn} fluent interface
+   * @returns {EOS} fluent interface
    * @api private
    */
-  Dawn.prototype.setClass = function setClass(className) {
-    this.viewport.setAttribute('class', 'dawn ' + className);
+  EOS.prototype.setClass = function setClass(className) {
+    this.viewport.setAttribute('class', 'eos ' + className);
     return this;
   };
 
@@ -247,7 +247,7 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.nav = function nav(e) {
+  EOS.prototype.nav = function nav(e) {
     if (d.activeElement === this.searchbox) return;
     this.setClass(~this.viewport.getAttribute('class').indexOf('nav') ? '' : 'nav');
   };
@@ -258,7 +258,7 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.focus = function focus(e) {
+  EOS.prototype.focus = function focus(e) {
     var active = d.activeElement;
     if (active === this.searchbox || !this.searchbox) return;
 
@@ -269,12 +269,12 @@
   /**
    * Restore the state and call the mapped function.
    *
-   * @returns {Dawn} fluent interface
+   * @returns {EOS} fluent interface
    * @api private
    */
-  Dawn.prototype.reset = function reset() {
+  EOS.prototype.reset = function reset() {
     this.searchbox.blur();
-    this.viewport.setAttribute('class', 'dawn');
+    this.viewport.setAttribute('class', 'eos');
     return this;
   };
 
@@ -284,13 +284,13 @@
    * @param {Event} e
    * @api private
    */
-  Dawn.prototype.hotkeys = function hotkeys(e) {
+  EOS.prototype.hotkeys = function hotkeys(e) {
     if (map[e.keyCode]) this[map[e.keyCode]].call(this, e);
   };
 
   // Initialize getting started instance, more than one doensn't make sense.
-  Dawn.instance = new Dawn(document.getElementsByClassName('dawn')[0]);
+  EOS.instance = new EOS(document.getElementsByClassName('eos')[0]);
 
   // Expose constructor and current instances to window.
-  w.Dawn = Dawn;
+  w.EOS = EOS;
 })(window, document);
