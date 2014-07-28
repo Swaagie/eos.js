@@ -26,7 +26,7 @@ gulp.task('script', function script() {
 //
 gulp.task('style', function style() {
   return gulp.src('client/css/*.styl')
-    .pipe(stylus({use: [nib()]}))
+    .pipe(stylus({ use: nib() }))
     .pipe(concat('eos.min.css'))
     .pipe(gulp.dest('dist'));
 });
