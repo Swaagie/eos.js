@@ -12,6 +12,10 @@ var nib = require('nib')
 // Set production flag, useful to exclude sourcemaps.
 //
 var production = process.env.NODE_ENV === 'production';
+
+//
+// Default set of tasks.
+//
 gulp.task('default', ['script', 'style']);
 
 //
@@ -27,7 +31,6 @@ gulp.task('script', function script() {
   // Only write the source map if we are not building for production.
   //
   if (!production) work.pipe(sourcemaps.write());
-
   return work.pipe(gulp.dest('dist'));
 });
 
@@ -42,8 +45,7 @@ gulp.task('style', function style() {
   //
   // Only minify if env is production.
   //
-  if(production) work.pipe(minify());
-
+  if (production) work.pipe(minify());
   return work.pipe(gulp.dest('dist'));
 });
 
