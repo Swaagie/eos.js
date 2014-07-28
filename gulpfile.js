@@ -16,7 +16,7 @@ var production = process.env.NODE_ENV === 'production';
 //
 // Default set of tasks.
 //
-gulp.task('default', ['script', 'style']);
+gulp.task('default', ['script', 'style', 'fonts']);
 
 //
 // Define Gulp task to concat and minifiy scripts.
@@ -52,6 +52,17 @@ gulp.task('style', function style() {
   //
   if (production) work.pipe(minify());
   return work.pipe(gulp.dest('dist'));
+});
+
+//
+// Copy font files from the source location to dist
+//
+gulp.task('fonts', function fonts() {
+  return gulp.src([
+    'client/font/*',
+    '!client/font/*.css',
+    '!client/font/LICENCE.md'
+  ]).pipe(gulp.dest('dist'));
 });
 
 function type(string) {
