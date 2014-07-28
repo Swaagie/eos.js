@@ -1,31 +1,29 @@
 {
-  "name": "dawn",
-  "version": "1.0.0",
+  "name": "eos.js",
+  "version": "0.0.0",
   "description": "Get started, less text more action!",
-  "main": "src/dawn.js",
+  "main": "index.js",
   "scripts": {
     "test": "make test"
   },
   "dependencies": {
-    "atomic": "git://github.com/Swaagie/atomic.git#master"
+    "atomic": "git://github.com/Swaagie/atomic.git#master",
   },
   "devDependencies": {
-    "square": "git://github.com/observing/square.git#development"
+    "browserify": "5.9.x"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Swaagie/dawn.git"
+    "url": "git://github.com/Swaagie/eos.js.git"
   },
   "keywords": [
     "Getting started",
     "get started",
-    "quick",
-    "easy",
-    "dawn"
+    "eos"
   ],
   "author": "Martijn Swaagman",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Swaagie/dawn/issues"
+    "url": "https://github.com/Swaagie/eos.js/issues"
   }
 }
