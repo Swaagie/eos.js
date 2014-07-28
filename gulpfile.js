@@ -38,7 +38,12 @@ gulp.task('script', function script() {
 // Gulp task to generate CSS from stylus files.
 //
 gulp.task('style', function style() {
-  var work = gulp.src('client/css/*.styl')
+  var files = [
+    'client/css/*.styl',
+    'client/font/typicons.css'
+  ];
+
+  var work = gulp.src(files)
     .pipe(stylus({ use: nib() }))
     .pipe(concat(type('eos.{type}.css')));
 
