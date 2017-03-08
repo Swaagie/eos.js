@@ -1,5 +1,7 @@
 # EOS.js `\0`
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Swaagie/eos.js.svg)](https://greenkeeper.io/)
+
 Get started, less text more action!
 
 ### Installation
